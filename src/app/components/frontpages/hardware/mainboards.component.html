@@ -1,0 +1,527 @@
+<app-modal id="hardware-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Hardware</h1>
+    </div>
+    <div class="row">
+      Hardware erfolgreich hinzugefügt!
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="hardwareAdd('hardware-modal')">Weitere Hardware hinzufügen</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="mainboard-delete-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Hardware</h1>
+    </div>
+    <div class="row">
+      Hardware wirklich löschen?
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="mainboardDelete('mainboard-delete-modal')">Ja</button>
+      <button mdbBtn (click)="mainboardDeleteCancel('mainboard-delete-modal')">Nein</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="cpu-delete-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Hardware</h1>
+    </div>
+    <div class="row">
+      Hardware wirklich löschen?
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="CPUDelete('cpu-delete-modal')">Ja</button>
+      <button mdbBtn (click)="CPUDeleteCancel('cpu-delete-modal')">Nein</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="ram-delete-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Hardware</h1>
+    </div>
+    <div class="row">
+      Hardware wirklich löschen?
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="RAMDelete('ram-delete-modal')">Ja</button>
+      <button mdbBtn (click)="RAMDeleteCancel('ram-delete-modal')">Nein</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="pcie-delete-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Hardware</h1>
+    </div>
+    <div class="row">
+      Hardware wirklich löschen?
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="PCIEDelete('pcie-delete-modal')">Ja</button>
+      <button mdbBtn (click)="PCIEDeleteCancel('pcie-delete-modal')">Nein</button>
+    </div>
+  </div>
+</app-modal>
+
+<div class="block-center">
+  <div class="sticky">
+  <h2>Hardware</h2>
+    <br><div class="divider"></div>
+  </div>
+  <div class="div-width">
+    <simple-notifications></simple-notifications>
+    <mat-tab-group dynamicHeight>
+      <mat-tab label="Übersicht" >
+        <div class="table table-striped table-bordered table-sm">
+          <div class="col" >
+            <div *ngIf="loadingCounter != 4" style="display: flex; justify-content: center; align-items: center; background: white;">
+              <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+            </div>
+            <mat-tab-group dynamicHeight *ngIf="loadingCounter == 4">
+              <mat-tab label="Mainboard">
+                <mat-grid-list cols="1" rowHeight='3:1' >
+                  <mat-grid-tile class="grid-tile">
+                    <mat-accordion displayMode="flat" multi class="mat-table grid-header">
+                      <section matSort class="mat-elevation-z2 mat-header-row "  style="position: absolute; width: 100%;" (matSortChange)="sortMainboardData($event)">
+                        <span class="mat-header-cell" mat-sort-header="name">Name</span>
+                        <span class="mat-header-cell" mat-sort-header="producer">Produzent</span>
+                        <span class="mat-header-cell" mat-sort-header="socket">Socket</span>
+                        <span class="mat-header-cell" mat-sort-header="chipset">Chipset</span>
+                        <span class="mat-header-cell" mat-sort-header="ddr">DDR</span>
+                        <span class="mat-header-cell">Details</span>
+                        <span class="mat-header-cell"></span>
+                        <span class="mat-header-cell"></span>
+                      </section>
+                      <div>
+                        <mat-expansion-panel *ngFor="let item of mDataSource.data">
+                          <mat-expansion-panel-header class="mat-row">
+                            <span class="mat-cell">{{item.node.name}}</span>
+                            <span class="mat-cell">{{item.node.producer}}</span>
+                            <span class="mat-cell">{{item.node.socket}}</span>
+                            <span class="mat-cell">{{item.node.chipset}}</span>
+                            <span class="mat-cell">{{item.node.ddr}}</span>
+                            <span class="mat-cell">
+                              {{'Sockets: ' + item.node.sockets}} <br>
+                              {{'Dimmslots: ' + item.node.dimmslots}} <br>
+                              {{'PCIeslots: ' + item.node.pcieslots}} <br>
+                              {{'M2slots: ' + item.node.m2slots}} <br>
+                              {{'Sataconnector: ' + item.node.sataconnectors}} <br>
+                              {{'Formfacotr: ' + item.node.formfactor}}
+                            </span>
+                            <span class="mat-cell"><button mat-raised-button (click)="openModal('mainboard-delete-modal', item.node.mainboardId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button></span>
+                            <span class="mat-cell"><button mat-raised-button (click)="editMainboard(item.node)"><img src="../../../../assets/baseline-edit-24px.svg" class="edit"></button></span>
+                          </mat-expansion-panel-header>
+                          <div>
+                            <table>
+                              <th>Computer</th>
+                              <th>Raum</th>
+                              <th>Benutzer</th>
+                              <th>IP</th>
+                              <tr *ngFor="let computer of item.node.computer['edges']">
+                                <td>
+                                  {{computer.node.name}}
+                                </td>
+                                <td>
+                                  {{computer.node.room.name}}
+                                </td>
+                                <td>
+                                  {{computer.node.user.firstname + ' ' + computer.node.user.lastname}}
+                                </td>
+                                <td>
+                                  {{computer.node.ip}}
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </mat-expansion-panel>
+                      </div>
+                    </mat-accordion>
+                  </mat-grid-tile>
+                </mat-grid-list>
+              </mat-tab>
+              <mat-tab label="CPU">
+                <mat-grid-list cols="1" rowHeight='3:1' >
+                  <mat-grid-tile class="grid-tile">
+                    <mat-accordion displayMode="flat" multi class="mat-table grid-header">
+                      <section matSort class="mat-elevation-z2 mat-header-row "  style="position: absolute; width: 100%;" (matSortChange)="sortProcessorData($event)">
+                        <span class="mat-header-cell" mat-sort-header="producer">Produzent</span>
+                        <span class="mat-header-cell" mat-sort-header="name">Name</span>
+                        <span class="mat-header-cell" mat-sort-header="clock">Clock</span>
+                        <span class="mat-header-cell" mat-sort-header="architecture">Architektur</span>
+                        <span class="mat-header-cell" mat-sort-header="socket">Socket</span>
+                        <span class="mat-header-cell"></span>
+                        <span class="mat-header-cell"></span>
+                      </section>
+                      <div>
+                        <mat-expansion-panel *ngFor="let item of proDataSource.data">
+                          <mat-expansion-panel-header class="mat-expansion-panel-header-other">
+                            <span  class="mat-cell">{{item.node.producer}}</span>
+                            <span class="mat-cell">{{item.node.name}}</span>
+                            <span class="mat-cell">{{item.node.clock}}</span>
+                            <span class="mat-cell">{{item.node.architecture}}</span>
+                            <span class="mat-cell">{{item.node.socket}}</span>
+                            <span class="mat-cell"><button mat-raised-button (click)="openModal('cpu-delete-modal', item.node.processorId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button></span>
+                            <span class="mat-cell"><button mat-raised-button (click)="editCPU(item.node)"><img src="../../../../assets/baseline-edit-24px.svg" class="edit"></button></span>
+                          </mat-expansion-panel-header>
+                        </mat-expansion-panel>
+                      </div>
+                    </mat-accordion>
+                  </mat-grid-tile>
+                </mat-grid-list>
+              </mat-tab>
+              <mat-tab label="PCIe">
+                <mat-grid-list cols="1" rowHeight='3:1' >
+                  <mat-grid-tile class="grid-tile">
+                    <mat-accordion displayMode="flat" multi class="mat-table grid-header">
+                      <section matSort class="mat-elevation-z2 mat-header-row "  style="position: absolute; width: 100%;" (matSortChange)="sortPCIeData($event)">
+                        <span class="mat-header-cell" mat-sort-header="name">Name</span>
+                        <span class="mat-header-cell" mat-sort-header="producer">Produzent</span>
+                        <span class="mat-header-cell" mat-sort-header="type">Typ</span>
+                        <span class="mat-header-cell"></span>
+                        <span class="mat-header-cell"></span>
+                      </section>
+                      <div>
+                        <mat-expansion-panel *ngFor="let item of pciDataSource.data">
+                          <mat-expansion-panel-header class="mat-expansion-panel-header-other">
+                            <span  class="mat-cell">{{item.node.name}}</span>
+                            <span class="mat-cell">{{item.node.producer}}</span>
+                            <span class="mat-cell">{{item.node.type}}</span>
+                            <span class="mat-cell"><button mat-raised-button (click)="openModal('pcie-delete-modal', item.node.pcieId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button></span>
+                            <span class="mat-cell"><button mat-raised-button (click)="editPCIE(item.node)"><img src="../../../../assets/baseline-edit-24px.svg" class="edit"></button></span>
+                          </mat-expansion-panel-header>
+                        </mat-expansion-panel>
+                      </div>
+                    </mat-accordion>
+                  </mat-grid-tile>
+                </mat-grid-list>
+              </mat-tab>
+              <mat-tab label="Arbeitsspeicher">
+                <mat-grid-list cols="1" rowHeight='3:1' >
+                  <mat-grid-tile class="grid-tile">
+                    <mat-accordion displayMode="flat" multi class="mat-table grid-header">
+                      <section matSort class="mat-elevation-z2 mat-header-row "  style="position: absolute; width: 100%;" (matSortChange)="sortRAMData($event)">
+                        <span class="mat-header-cell" mat-sort-header="producer">Produzent</span>
+                        <span class="mat-header-cell" mat-sort-header="name">Name</span>
+                        <span class="mat-header-cell" mat-sort-header="capacity">Kapazität</span>
+                        <span class="mat-header-cell" mat-sort-header="frequency">Frequenz</span>
+                        <span class="mat-header-cell" mat-sort-header="standard">Standard</span>
+                        <span class="mat-header-cell"></span>
+                        <span class="mat-header-cell"></span>
+                      </section>
+                      <div>
+                        <mat-expansion-panel *ngFor="let item of raDataSource.data">
+                          <mat-expansion-panel-header class="mat-expansion-panel-header-other">
+                            <span  class="mat-cell">{{item.node.producer}}</span>
+                            <span class="mat-cell">{{item.node.name}}</span>
+                            <span class="mat-cell">{{item.node.capacity}}</span>
+                            <span class="mat-cell">{{item.node.frequency}}</span>
+                            <span class="mat-cell">{{item.node.standard}}</span>
+                            <span class="mat-cell"><button mat-raised-button (click)="openModal('ram-delete-modal', item.node.ramId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button></span>
+                            <span class="mat-cell"><button mat-raised-button (click)="editRAM(item.node)"><img src="../../../../assets/baseline-edit-24px.svg" class="edit"></button></span>
+                          </mat-expansion-panel-header>
+                        </mat-expansion-panel>
+                      </div>
+                    </mat-accordion>
+                  </mat-grid-tile>
+                </mat-grid-list>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Hinzufügen">
+        <div class="table table-striped table-bordered table-sm">
+          <div class="col">
+            <mat-tab-group dynamicHeight>
+              <mat-tab label="Mainboard">
+                <div style="justify-content: center; display: flex">
+                  <mat-card>
+                    <mat-card-header>
+                      <mat-card-title>
+                        Mainboard
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <form #mainboardForm="ngForm">
+                        <table style="width: auto; align-content: center">
+                          <tbody>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>Hersteller</mat-label>
+                                <mat-select id="mainboardproducer"  [(ngModel)]="_mainboard.producer" name="mainboardproducer">
+                                  <mat-option *ngFor="let prod of _mainboardproducers" [value]="prod">{{prod}}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </td>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>Name</mat-label>
+                                <input matInput id="motherboardname"  [(ngModel)]="_mainboard.name" name="mainboardname">
+                              </mat-form-field>
+                            </td>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>Socket</mat-label>
+                                <input matInput id="motherboardsocket"  [(ngModel)]="_mainboard.socket" name="mainboardsocket">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>Socket Anzahl</mat-label>
+                                <input matInput type="number" id="motherboardsockets"  [(ngModel)]="_mainboard.sockets" name="mainboardsockets">
+                              </mat-form-field>
+                            </td>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>Chipset</mat-label>
+                                <input matInput id="motherboardchipset"  [(ngModel)]="_mainboard.chipset" name="mainboardchipset">
+                              </mat-form-field>
+                            </td>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>RAM Standard</mat-label>
+                                <mat-select id="motherboardddr"  [(ngModel)]="_mainboard.ddr" name="motherboardddr">
+                                  <mat-option *ngFor="let stan of _ramstandards" [value]="stan">{{stan}}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>Dimm-Slots</mat-label>
+                                <input matInput type="number" id="mainboarddimmslots" min="1" max="20"  [(ngModel)]="_mainboard.dimmslots" name="mainboardsimmslots">
+                              </mat-form-field>
+                            </td>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>PCIe-Slots</mat-label>
+                                <input matInput type="number" id="mainboardpcieslots" min="0" max="20"  [(ngModel)]="_mainboard.pcieslots" name="mainboardpcieslots">
+                              </mat-form-field>
+                            </td>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>M.2-Slots</mat-label>
+                                <input matInput type="number" id="mainboardm2slots" min="0" max="10"  [(ngModel)]="_mainboard.m2slots" name="mainboardm2slots">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>S-ATA Anschlüsse</mat-label>
+                                <input matInput type="number" id="mainboardsataconnectors" min="1" max="20"  [(ngModel)]="_mainboard.sataconnectors" name="mainboardsataconnectors">
+                              </mat-form-field>
+                            </td>
+                            <td colspan="2">
+                              <mat-form-field>
+                                <mat-label>Formfaktor</mat-label>
+                                <mat-select id="mainboardformfactor"  [(ngModel)]="_mainboard.formfactor" name="mainboardformfactor">
+                                  <mat-option *ngFor="let form of _mainboardformfactors" [value]="form">{{form}}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </form>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-raised-button class="btn-primary" (click)="newMainboard()" [disabled]="!mainboardForm.form.valid">Hinzufügen</button>
+                    </mat-card-actions>
+                  </mat-card>
+                </div>
+              </mat-tab>
+              <mat-tab label="CPU">
+                    <div style="justify-content: center; display: flex">
+                      <mat-card>
+                        <mat-card-header>
+                          <mat-card-title>
+                            CPU
+                          </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                          <form #cpuForm="ngForm">
+                            <table style="width: auto; align-content: center">
+                              <tbody>
+                              <tr>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Hersteller</mat-label>
+                                    <mat-select id="cpuproducer" required [(ngModel)]="_cpu.producer" name="cpuproducer">
+                                      <mat-option *ngFor="let prod of _cpuproducers" [value]="prod">{{prod}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Name</mat-label>
+                                    <input matInput id="cpuname" required [(ngModel)]="_cpu.name" name="cpuname">
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Taktrate</mat-label>
+                                    <input matInput id="cpuclock" required min="0.00" max="9.99" step=".1" type="number" [(ngModel)]="_cpu.clock" name="cpuclock">
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field>
+                                  <mat-label>Architektur</mat-label>
+                                  <mat-select id="cpuarchitecture" required [(ngModel)]="_cpu.architecture" name="cpuarchitecture">
+                                    <mat-option *ngFor="let arch of _architectures" [value]="arch">{{arch}}</mat-option>
+                                  </mat-select>
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="2">
+                                  <mat-form-field>
+                                    <mat-label>Sockel</mat-label>
+                                    <input matInput id="cpusocket" required [(ngModel)]="_cpu.socket" name="cpucocket">
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </form>
+                        </mat-card-content>
+                        <mat-card-actions>
+                          <button mat-raised-button  class="btn-primary" (click)="newCPU()" [disabled]="!cpuForm.form.valid">Hinzufügen</button>
+                        </mat-card-actions>
+                      </mat-card>
+                    </div>
+              </mat-tab>
+              <mat-tab label="PCIe">
+                    <div style="justify-content: center; display: flex">
+                      <mat-card>
+                        <mat-card-header>
+                          <mat-card-title>
+                            PCIe
+                          </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                          <form #pcieForm="ngForm">
+                            <table style="width: auto; align-content: center">
+                              <tbody>
+                              <tr>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Hersteller</mat-label>
+                                    <mat-select id="pcieproducer" required [(value)]="_pcie.producer" name="pcieproducer">
+                                      <mat-option *ngFor="let prod of _pcieproducers" [value]="prod">{{prod}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Name</mat-label>
+                                    <input matInput id="pciename" required [(ngModel)]="_pcie.name" name="pciename">
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="2">
+                                  <mat-form-field>
+                                    <mat-label>Typ</mat-label>
+                                    <mat-select id="pcietype" required [(ngModel)]="_pcie.type" name="pcietype">
+                                      <mat-option *ngFor="let typ of _pcietypes" [value]="typ"> {{typ}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </form>
+                        </mat-card-content>
+                        <mat-card-actions>
+                          <button mat-raised-button (click)="newPCIE()" class="btn-primary" [disabled]="!pcieForm.form.valid">Hinzufügen</button>
+                        </mat-card-actions>
+                      </mat-card>
+                    </div>
+              </mat-tab>
+              <mat-tab label="Arbeitsspeicher">
+                    <div style="justify-content: center; display: flex">
+                      <mat-card>
+                        <mat-card-header>
+                          <mat-card-title>
+                            Arbeitsspeicher
+                          </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                          <form #ramForm="ngForm">
+                            <table style="width: auto; align-content: center">
+                              <tbody>
+                              <tr>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Hersteller</mat-label>
+                                    <mat-select id="ramproducer" required [(ngModel)]="_ram.producer" name="ramproducer">
+                                      <mat-option *ngFor="let prod of _ramproducers" [value]="prod">{{prod}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Name</mat-label>
+                                    <input matInput id="ramname" required [(ngModel)]="_ram.name" name="ramname">
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Standard</mat-label>
+                                    <mat-select id="ramstandard" required [(ngModel)]="_ram.standard"  name="ramstandard"  (ngModelChange)="onSelect()">
+                                      <mat-option *ngFor="let stan of _ramstandards" [value]="stan">{{stan}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field>
+                                    <mat-label>Frequenz</mat-label>
+                                    <mat-select id="ramfrequency" required [(ngModel)]="_ram.frequency" name="ramfrequency">
+                                      <mat-option *ngFor="let freq of _ramfrequencies" [value]="freq">{{freq}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="2">
+                                  <mat-form-field>
+                                    <mat-label>Kapazität in GB</mat-label>
+                                    <input matInput id="ramcapacity" required [(ngModel)]="_ram.capacity" name="ramcapacity">
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </form>
+                        </mat-card-content>
+                        <mat-card-actions>
+                          <button mat-raised-button (click)="newRAM()" class="btn-primary" [disabled]="!ramForm.form.valid">Hinzufügen</button>
+                        </mat-card-actions>
+                      </mat-card>
+                    </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

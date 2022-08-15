@@ -1,0 +1,25 @@
+<div class="block-center">
+  <simple-notifications></simple-notifications>
+  <form [formGroup]="loginForm">
+    <mat-card>
+      <mat-card-title>Login</mat-card-title>
+      <mat-card-content>
+        <p>
+          <mat-form-field>
+            <mat-label>Benutzername</mat-label>
+            <input matInput placeholder="Benutzername" [(ngModel)]="user.userid" id="userid" formControlName="userid">
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <mat-label>Passwort</mat-label>
+            <input matInput type="password" placeholder="Passwort" [(ngModel)]="user.password" id="password" formControlName="password">
+          </mat-form-field>
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button (click)="login()">Login</button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

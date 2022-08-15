@@ -1,0 +1,18 @@
+<div class="block-center">
+  <div class="sticky">
+    <h2>Freie Ips</h2><br><div class="divider"></div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table>
+        <tbody>
+        <tr *ngFor="let ipArray of freeIpsSplitted, let i = index">
+          <td *ngFor="let ips of ipArray">
+            <a class="list-group-item list-group-item-action" routerLink="../rechnereintragen">{{ips}}</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

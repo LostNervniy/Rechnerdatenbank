@@ -1,0 +1,41 @@
+<mat-horizontal-stepper linear #stepper>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Füge MAC-Adressen hinzu</ng-template>
+      <mat-form-field class="full-width">
+        <mat-label>Type</mat-label>
+        <input matInput id="type" [(ngModel)]="type" formControlName="typeCtrl">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>MAC-Adresse</mat-label>
+        <input matInput id="mac" [(ngModel)]="macadresse" formControlName="macCtrl">
+      </mat-form-field>
+      <div mat-dialog-content>
+        <div class="col" >
+          <div style="justify-content: center; overflow: auto">
+            <mat-table #table [dataSource]="dataSource">
+              <ng-container matColumnDef="type">
+                <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{row.type}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="mac">
+                <mat-header-cell *matHeaderCellDef>MAC-Adresse</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{row.mac}}</mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div>
+        <button mat-raised-button (click)="addRow()" [disabled]="this.addRowButton">Push to list</button>
+        <button mat-raised-button (click)="addMacAdresses()" [disabled]="this.addMacAdressesButton">Fertig</button>
+        <button mat-raised-button (click)="closeStepper()">Abbrechen</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>

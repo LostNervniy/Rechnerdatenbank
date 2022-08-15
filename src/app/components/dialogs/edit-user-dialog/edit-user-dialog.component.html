@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Bearbeite Benutzer: {{data['selectedUser'].firstname + ' ' + data['selectedUser'].lastname}}</h1>
+<div mat-dialog-content>
+  <form #userForm>
+    <table>
+      <tbody>
+      <td>
+        <mat-form-field>
+          <mat-label for="firstname">Vorname</mat-label>
+          <input matInput id="firstname" [(ngModel)]="firstname" name="firstname">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field >
+          <mat-label>Rolle</mat-label>
+          <mat-select required id="role" [(ngModel)]="role" name="role">
+            <mat-option *ngFor="let rol of roles" [value]="rol">{{rol}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <mat-label for="lastname">Nachname</mat-label>
+          <input matInput id="lastname" [(ngModel)]="lastname" name="lastname">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <mat-label for="email">E-Mail</mat-label>
+          <textarea matInput id="email" [(ngModel)]="email" name="email"></textarea>
+        </mat-form-field>
+      </td>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="editUser()">Speichern</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button (click)="closeEditUser()">Abbrechen</button>
+</div>
+<simple-notifications></simple-notifications>

@@ -1,0 +1,154 @@
+<h1 mat-dialog-title>Computer bearbeiten</h1>
+<form [formGroup]="computerEditForm">
+<div mat-dialog-content>
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label for="computername">Name</mat-label>
+                <input matInput id="computername" [(ngModel)]="computer.name" [placeholder]="data.computer.name" formControlName="computername">
+              </mat-form-field>
+            </div>
+          </td>
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label for="computeredv">EDV</mat-label>
+                <input matInput id="computeredv" [(ngModel)]="computer.edv" [placeholder]="data.computer.edv" formControlName="computeredv" >
+              </mat-form-field>
+            </div>
+          </td>
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label for="computerip">IP</mat-label>
+                <input matInput id="computerip" [(ngModel)]="computer.ip" [placeholder]="data.computer.ip" formControlName="computerip">
+              </mat-form-field>
+            </div>
+          </td>
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label for="computerstorage">Festplatte</mat-label>
+                <input matInput id="computerstorage" [(ngModel)]="computer.storage" formControlName="computerstorage" [placeholder]="data.computer.storage">
+              </mat-form-field>
+            </div>
+          </td>
+          <td>
+            <mat-form-field>
+              <mat-label for="computerdescription">Bemerkung</mat-label>
+              <textarea matInput id="computerdescription" [(ngModel)]="computer.description" formControlName="computerdescription" [placeholder]="data.computer.description"></textarea>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field>
+              <mat-label for="computerroomSelect">Raum: {{data.computer.room.name}}</mat-label>
+              <mat-select id="computerroomSelect" [(ngModel)]="computer.room" formControlName="computerroomSelect">
+                <mat-option *ngFor="let room of computerrooms" [value]="room.room_id">{{room.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+            <td>
+              <mat-form-field>
+                <mat-label for="computeruser">Benutzer: {{data.computer.user.firstname  + ' ' + data.computer.user.lastname}}</mat-label>
+                <mat-select id="computeruser" [(ngModel)]="computer.user" formControlName="computeruser">
+                  <mat-option *ngFor="let user of computerusers" [value]="user.user_id">{{user.firstname + ' ' + user.lastname}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          <td>
+            <mat-form-field>
+              <mat-label for="computeros">OS: {{data.computer.os.name + ' ' +  data.computer.os.version}}</mat-label>
+              <mat-select id="computeros" [(ngModel)]="computer.os" formControlName="computeros">
+                <mat-option *ngFor="let os of computeroses" [value]="os.os_id">{{os.name + ' ' + os.version}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <mat-label for="computerrentable">Type: {{data.computer.type}}</mat-label>
+              <mat-select id="computertype" [(ngModel)]="computer.type" formControlName="computertype">
+                <mat-option *ngFor="let type of computertypes" [value]="type" >{{type}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <mat-label for="computertype" *ngIf="data.computer.borrowable == 0">Ausleihbar: Nein</mat-label>
+              <mat-label for="computertype" *ngIf="data.computer.borrowable == 1">Ausleihbar: Ja</mat-label>
+              <mat-select id="computerrentable" [(ngModel)]="computer.rentable" formControlName="computerentable">
+                <mat-option [value]="1">Ja</mat-option>
+                <mat-option [value]="0">Nein</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </tr>
+      <tr>
+        <td>
+          <div class="form-group">
+            <mat-form-field>
+              <mat-label for="computermainboard">Mainboard: {{data.computer.mainboard.producer + ' ' + data.computer.mainboard.name}}</mat-label>
+              <mat-select id="computermainboard" [(ngModel)]="computer.mainboard" (ngModelChange)="mainboardSelected()" formControlName="computermainboard">
+                <mat-option *ngFor="let main of computermainboards" [value]="main" >{{main.producer + ' ' + main.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td *ngFor="let socket of cpusockets, let i = index">
+          <div class="form-group">
+            <mat-form-field>
+              <mat-label for="computerprocessor">CPU</mat-label>
+              <mat-select id="computerprocessor" [(ngModel)]="cpus[i]" formControlName="computerprocessor">
+                <mat-option *ngFor="let cpu of socket" [value]="cpu.processor_id" >{{cpu.producer + ' ' + cpu.name + ' ' + cpu.clock + ' GHz'}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td *ngFor="let slot of ramslots, let i = index">
+          <div class="form-group">
+            <mat-form-field>
+              <mat-label for="computerram">RAM-Slot {{i}}</mat-label>
+              <mat-select id="computerram" [(ngModel)]="rams[i]" formControlName="computerram">
+                <mat-option *ngFor="let ram of slot" [value]="ram.ram_id" >{{ram.producer + ' ' + ram.name + ' ' + ram.standard + ' ' + ram.frequency + ' ' + ram.capacity + ' GB'}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td *ngFor="let slot of pcieslots, let i = index">
+          <div class="form-group">
+            <mat-form-field>
+              <mat-label for="computerpcie">PCIe-Slot</mat-label>
+              <mat-select  id="computerpcie" [(ngModel)]="pcies[i]" formControlName="computerpcie">
+                <mat-option *ngFor="let pcie of slot" [value]="pcie.pcie_id" >{{pcie.producer + ' ' + pcie.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+</div>
+<div mat-dialog-actions>
+  <mat-form-field>
+    <mat-label>Hardware bearbeitet?</mat-label>
+    <mat-select for="hardwareEdited" [(ngModel)]="hardwareEditedCheck" required formControlName="hardwareEdited">
+      <mat-option [value]="1">Ja</mat-option>
+      <mat-option [value]="2">Nein</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button (click)="editComputer(computer, data)">Speichern</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button (click)="cancleEditComputer()">Abbrechen</button>
+</div>
+</form>

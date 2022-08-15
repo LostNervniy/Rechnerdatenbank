@@ -1,0 +1,172 @@
+<!--
+Dialogs
+-->
+<app-modal id="delete-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Benutzer löschen</h1>
+    </div>
+    <div class="row">
+      Möchtest du diesen Benutzer wirklich löschen?
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="closeModal('delete-modal')">Abbrechen</button>
+      <button mdbBtn (click)="deleteButton('delete-modal')">Löschen</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="user-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Benutzer</h1>
+    </div>
+    <div class="row">
+      Benutzer erfolgreich hinzugefügt!
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="userShow('user-modal')">Okay</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="user-error-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Fehler</h1>
+    </div>
+    <div class="row">
+      Benutzer existiert bereits.
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="userShow('user-error-modal')">Okay</button>
+    </div>
+  </div>
+</app-modal>
+<!--
+Content
+-->
+<div class="block-center">
+  <div class="sticky">
+  <h2>Benutzer</h2><br><div class="divider"></div>
+  </div>
+  <div class="div-width">
+    <mat-tab-group dynamicHeight>
+      <mat-tab label="Übersicht" >
+        <div class="table table-striped table-bordered table-sm" >
+          <div class="col" >
+            <div>
+              <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center; background: white;">
+                <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+              </div>
+              <mat-grid-list cols="1" rowHeight='3:1' *ngIf="!isLoading">
+                <mat-grid-tile class="grid-tile">
+                  <mat-accordion displayMode="flat" multi class="mat-table grid-header">
+                    <section matSort class="mat-elevation-z2 mat-header-row" style="width: 100%;" (matSortChange)="sortUserData($event)">
+                      <span class="mat-header-cell" mat-sort-header="firstname">Vorname</span>
+                      <span class="mat-header-cell" mat-sort-header="lastname">Nachname</span>
+                      <span class="mat-header-cell" mat-sort-header="role">Rolle</span>
+                      <span class="mat-header-cell" mat-sort-header="email">Email</span>
+                      <span class="mat-header-cell" ></span>
+                    </section>
+
+                    <div>
+                      <mat-expansion-panel *ngFor="let item of uDataSource.data">
+                        <mat-expansion-panel-header class="mat-row">
+                          <span class="mat-cell">{{item['node'].firstname}}</span>
+                          <span class="mat-cell">{{item['node'].lastname}}</span>
+                          <span class="mat-cell">{{item['node'].role}}</span>
+                          <span class="mat-cell">{{item['node'].email}}</span>
+                          <span class="mat-cell">
+                            <button mat-raised-button  (click)="openShowComputerOfUserDialog(item['node'].userId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button>
+                            <button mat-raised-button (click)="editUser(item['node'])"><img src="../../../../assets/baseline-edit-24px.svg" class="edit"></button>
+                          </span>
+                        </mat-expansion-panel-header>
+
+                        <div>
+                          <table>
+                            <th>Computer</th>
+                            <th>Raum</th>
+                            <th>IP</th>
+                            <tr *ngFor="let computer of item['node']['computer']['edges']">
+                              <td>
+                                {{computer['node'].name}}
+                              </td>
+                              <td>
+                                {{computer['node']['room'].name}}
+                              </td>
+                              <td>
+                                {{computer['node'].ip}}
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </mat-expansion-panel>
+                    </div>
+                  </mat-accordion>
+                </mat-grid-tile>
+              </mat-grid-list>
+            </div>
+          </div>
+        </div>
+        <simple-notifications></simple-notifications>
+      </mat-tab>
+      <mat-tab label="Hinzufügen">
+        <div class="table table-striped table-bordered table-sm" >
+                <div style="justify-content: center; display: flex">
+                  <mat-card>
+                    <mat-card-header>
+                      <mat-card-title>
+                        Benutzer
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <form #userForm="ngForm">
+                        <table style="width: auto; align-content: center">
+                          <tbody>
+                          <tr>
+                            <td>
+                              <mat-form-field >
+                                <mat-label>Vorname</mat-label>
+                                <input matInput required id="firstname" [(ngModel)]="modelUser.firstname" name="firstname">
+                              </mat-form-field>
+                            </td>
+                            <td>
+                              <mat-form-field>
+                                <mat-label>Nachname</mat-label>
+                                <input matInput required id="lastname" [(ngModel)]="modelUser.lastname" name="lastname">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">
+                              <mat-form-field>
+                                <mat-label>Email</mat-label>
+                                <input matInput required id="email" [(ngModel)]="modelUser.email" name="email">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field >
+                                <mat-label>Rolle</mat-label>
+                                <mat-select required id="role" [(ngModel)]="modelUser.role" name="role">
+                                  <mat-option *ngFor="let rol of roles" [value]="rol">{{rol}}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </form>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-raised-button (click)="newUser()" class="btn-primary" [disabled]="!userForm.form.valid">Hinzufügen</button>
+                    </mat-card-actions>
+                  </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

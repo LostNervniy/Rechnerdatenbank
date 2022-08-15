@@ -1,0 +1,65 @@
+@import '~bootstrap/dist/css/bootstrap-reboot.css';
+@import '~bootstrap/dist/css/bootstrap-grid.css';
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
+
+
+
+.container {
+  margin-left: 8%;
+  margin-right: 8%;
+}
+
+app-modal {
+  /* modals are hidden by default */
+  display: none;
+
+  .app-modal {
+    /* modal container fixed across whole screen */
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    /* z-index must be higher than .jw-modal-background */
+    z-index: 1000;
+
+    /* enables scrolling for tall modals */
+    overflow: auto;
+
+    .app-modal-body {
+      padding: 20px;
+      background: #fff;
+
+      /* margin exposes part of the modal background */
+      margin: 20%;
+    }
+  }
+
+  .app-modal-background {
+    /* modal background fixed across whole screen */
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    /* semi-transparent black  */
+    background-color: #000;
+    opacity: 0.75;
+
+    /* z-index must be below .jw-modal and above everything else  */
+    z-index: 900;
+  }
+}
+
+body.app-modal-open {
+  /* body overflow is hidden to hide main scrollbar when modal window is open */
+  overflow: hidden;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

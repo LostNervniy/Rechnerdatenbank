@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Bearbeite Betriebssystem: {{data.selectedOP.name + ' ' + data.selectedOP.version}}</h1>
+<div mat-dialog-content>
+  <form #softwareForm>
+    <table>
+      <tbody>
+      <td>
+        <mat-form-field>
+          <mat-label for="name">Name</mat-label>
+          <input matInput id="name" [(ngModel)]="name" name="name">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <mat-label for="version">Version</mat-label>
+          <input matInput id="version" [(ngModel)]="version" name="version">
+        </mat-form-field>
+      </td>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button [disabled]="disable" (click)="editOP()">Bearbeiten</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button [disabled]="disable"  (click)="cancleEditOP()">Abbrechen</button>
+</div>

@@ -1,0 +1,160 @@
+.block-center{
+  display: flex;
+  max-width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.divider{
+  width: 5px;
+  height: auto;
+  display: inline-block;
+}
+
+.sticky{
+  position: -webkit-sticky;
+  position: sticky;
+  float: left;
+  background: white;
+  width: 100%;
+  z-index: 3;
+  box-shadow: 0px -5px 3px lightgray inset;
+  top: 0;
+}
+
+table{
+  width: 100%;
+  table-layout: fixed;
+}
+
+
+
+
+
+.mat-cell-firstchild{
+  padding-left: unset !important;
+  margin-right: 8px !important;
+  horiz-align: left !important;
+  vertical-align: text-top !important;
+}
+
+.mat-header-cell-firstchild{
+  margin: unset !important;
+  padding-left: unset !important;
+  padding-right: 13px !important;
+  horiz-align: left !important;
+}
+
+
+.mat-row:nth-child(2n+1){
+  background-color: #E8F1FA;
+}
+
+
+
+.mat-expansion-panel-header.mat-row {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+  border-bottom: none;
+}
+
+.mat-expansion-panel-header-other{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: none;
+  background-color: #E8F1FA
+}
+
+.mat-accordion .mat-header-row {
+  padding-left: 1.5rem;
+  padding-right: 2rem;
+  border-bottom: none;
+}
+
+.mat-expansion-panel-header.mat-row {
+  border-bottom: none;
+}
+
+
+.mat-table {
+  display: block;
+}
+
+.mat-cell, .mat-header-cell {
+  flex: 1;
+  overflow: hidden;
+  word-wrap: break-word;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+
+
+.mat-header-row {
+  position: -webkit-sticky;
+  position: sticky;
+  background: white;
+  z-index: 1;
+  box-shadow: 0px -5px 0px lightgray inset;
+  top: 93px;
+  display: flex;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+
+.div-width{
+  width: 100% !important;
+}
+
+.grid-tile{
+  width: 100%;
+  overflow-y: scroll
+}
+
+.grid-header{
+  width: 100%;
+  height: 100%
+}
+.textarea-note{
+  overflow: hidden;
+  resize: none !important;
+}
+
+mat-tab-group{
+  width: 100%;
+}
+
+
+.tablewidth{
+  height: 100%;
+  width: 100% !important;
+}
+
+
+.mat-grid-tile-list{
+  background: white;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+
+.mat-grid-tile-list-light{
+  background: white;
+}
+
+
+.mat-form-field{
+  border: 0.5px solid darkgrey;
+  border-collapse: collapse;
+  font-size: 14px;
+  width: 100%;
+}
+
+
+section{
+  position: initial !important;
+}

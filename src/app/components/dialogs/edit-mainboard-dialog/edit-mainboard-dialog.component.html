@@ -1,0 +1,96 @@
+
+<h1 mat-dialog-title>Bearbeite Mainboard</h1>
+<div mat-dialog-content>
+  <form #mainboardForm>
+    <table>
+      <tbody>
+      <tr>
+      <td>
+        <mat-form-field>
+          <mat-label>Hersteller</mat-label>
+          <mat-select id="mainboardproducer"  [(ngModel)]="_mainboard.producer" name="mainboardproducer">
+            <mat-option *ngFor="let prod of _mainboardproducers" [value]="prod">{{prod}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput id="motherboardname"  [(ngModel)]="_mainboard.name" name="mainboardname">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <mat-label>Socket</mat-label>
+          <input matInput id="motherboardsocket"  [(ngModel)]="_mainboard.socket" name="mainboardsocket">
+        </mat-form-field>
+      </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label>Socket Anzahl</mat-label>
+            <input matInput type="number" id="motherboardsockets"  [(ngModel)]="_mainboard.sockets" name="mainboardsockets">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label>Chipset</mat-label>
+            <input matInput id="motherboardchipset"  [(ngModel)]="_mainboard.chipset" name="mainboardchipset">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label>RAM Standard</mat-label>
+            <mat-select id="motherboardddr"  [(ngModel)]="_mainboard.ddr" name="motherboardddr">
+              <mat-option *ngFor="let stan of _ramstandards" [value]="stan">{{stan}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label>Dimm-Slots</mat-label>
+            <input matInput type="number" id="mainboarddimmslots" min="1" max="20"  [(ngModel)]="_mainboard.dimmslots" name="mainboardsimmslots">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label>PCIe-Slots</mat-label>
+            <input matInput type="number" id="mainboardpcieslots" min="0" max="20"  [(ngModel)]="_mainboard.pcieslots" name="mainboardpcieslots">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label>M.2-Slots</mat-label>
+            <input matInput type="number" id="mainboardm2slots" min="0" max="10"  [(ngModel)]="_mainboard.m2slots" name="mainboardm2slots">
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label>S-ATA Anschlüsse</mat-label>
+            <input matInput type="number" id="mainboardsataconnectors" min="1" max="20"  [(ngModel)]="_mainboard.sataconnectors" name="mainboardsataconnectors">
+          </mat-form-field>
+        </td>
+        <td colspan="2">
+          <mat-form-field>
+            <mat-label>Formfaktor</mat-label>
+            <mat-select id="mainboardformfactor"  [(ngModel)]="_mainboard.formfactor" name="mainboardformfactor">
+              <mat-option *ngFor="let form of _mainboardformfactors" [value]="form">{{form}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="editMainboard()">Speichern</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button (click)="closeEditMainboard()">Abbrechen</button>
+</div>
+
+

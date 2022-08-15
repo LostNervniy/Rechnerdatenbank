@@ -1,0 +1,45 @@
+<form #userChangeForm>
+  <div mat-dialog-content>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="computerDataSource">
+        <ng-container matColumnDef="ip">
+          <th mat-header-cell *matHeaderCellDef>IP</th>
+          <td mat-cell *matCellDef="let element">{{element['node']['ip']}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element">{{element['node']['name']}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>Aktuelle Benutzer</th>
+          <td mat-cell *matCellDef="let element">{{element['node']['user']['firstname'] + ' ' + element['node']['user']['lastname']}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="newUser">
+          <th mat-header-cell *matHeaderCellDef>Neuer Benutzer</th>
+          <td mat-cell *matCellDef="let element, let indexOfElement = index">
+            <mat-form-field>
+              <mat-label>Benutzer</mat-label>
+              <mat-select id="newUser" [(ngModel)]="selectedUser[indexOfElement]" name="newUser" required>
+                <mat-option *ngFor="let user of allUser" [value]="user">
+                  {{user['node']['firstname'] + ' ' + user['node']['lastname']}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="editComputer()" [disabled]="buttonEnable">Alle Editieren</button>
+    <div style="width: 5px; height: auto; display: inline-block"></div>
+    <button mat-raised-button (click)="deleteUser()" [disabled]="buttonEnable">Benutzer löschen</button>
+    <div style="width: 5px; height: auto; display: inline-block"></div>
+    <button mat-raised-button (click)="cancle()" [disabled]="buttonEnable">Abbrechen</button>
+  </div>
+</form>

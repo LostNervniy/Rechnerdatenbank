@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Bearbeite MAC-Adresse</h1>
+<div mat-dialog-content>
+  <form #macForm>
+    <table>
+      <tbody>
+      <td>
+        <mat-form-field>
+          <mat-label for="mactype">Type</mat-label>
+          <input matInput id="mactype" [(ngModel)]="macType" [placeholder]="data.mac.type" name="type">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <mat-label for="macadresse">MAC-Adresse</mat-label>
+          <input matInput id="macadresse" [(ngModel)]="macAdresse" [placeholder]="data.mac.macAdresse" name="adresse">
+        </mat-form-field>
+      </td>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="editMacAdresse(macType, macAdresse, data)">Bearbeiten</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button (click)="deleteMacAdresse(data)">Löschen</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button (click)="cancleMacAdresse()">Abbrechen</button>
+</div>

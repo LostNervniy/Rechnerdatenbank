@@ -1,0 +1,51 @@
+<h1 mat-dialog-title>Bearbeite Software: {{data.selectedSoftware.name}}</h1>
+<div mat-dialog-content>
+  <form #softwareForm>
+    <table>
+      <tbody>
+      <td>
+        <mat-form-field>
+          <mat-label for="name">Name</mat-label>
+          <input matInput id="name" [(ngModel)]="name" name="name">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label for="count">Anzahl</mat-label>
+          <input matInput type="number" [(ngModel)]="count" name="count">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <mat-label for="contact_id">Ansprechpartner</mat-label>
+          <mat-select id="contact" [(ngModel)]="contact_id" name="contact">
+            <mat-option *ngFor="let iter_contact of all_contacts" [value]="iter_contact.user_id">{{iter_contact.firstname + ' ' + iter_contact.lastname}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label for="type">Typ</mat-label>
+          <mat-select id="type" [(ngModel)]="type" name="type">
+            <mat-option *ngFor="let iter_type of all_types" [value]="iter_type.id">{{iter_type.display}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label for="expiration_date">Ablaufdatum</mat-label>
+          <input matInput type="date" [(ngModel)]="expiration_date" name="expiration_date">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <mat-label for="description">Beschreibung</mat-label>
+          <textarea matInput id="description" [(ngModel)]="description" name="description"></textarea>
+        </mat-form-field>
+      </td>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button [disabled]="disable" (click)="editSoftware()">Bearbeiten</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button [disabled]="disable"  (click)="cancleEditSoftware()">Abbrechen</button>
+</div>

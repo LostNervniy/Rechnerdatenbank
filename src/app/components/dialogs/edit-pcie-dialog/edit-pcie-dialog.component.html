@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>Bearbeite PCIE</h1>
+<div mat-dialog-content>
+  <form #pcieForm="ngForm">
+    <table style="width: auto; align-content: center">
+      <tbody>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label>Hersteller</mat-label>
+            <mat-select id="pcieproducer" required [(value)]="_pcie.producer" name="pcieproducer">
+              <mat-option *ngFor="let prod of _pcieproducers" [value]="prod">{{prod}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput id="pciename" required [(ngModel)]="_pcie.name" name="pciename">
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <mat-form-field>
+            <mat-label>Typ</mat-label>
+            <mat-select id="pcietype" required [(ngModel)]="_pcie.type" name="pcietype">
+              <mat-option *ngFor="let typ of _pcietypes" [value]="typ"> {{typ}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="editPCIE()">Speichern</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button (click)="closeEditPCIE()">Abbrechen</button>
+</div>

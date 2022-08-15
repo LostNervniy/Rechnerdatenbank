@@ -1,0 +1,273 @@
+<!--
+Dialogs
+-->
+<app-modal id="delete-modal" xmlns="http://www.w3.org/1999/html">
+  <div class="container">
+    <div class="row">
+      <h1>Computer löschen</h1>
+    </div>
+    <div class="row">
+      Möchtest du diesen Rechner "{{pcToDeleteName}}" wirklich löschen?
+    </div>
+    <div class="row">
+      <button mat-raised-button (click)="closeModal('delete-modal')">Abbrechen</button>
+      <button mat-raised-button (click)="deleteButton('delete-modal')">Löschen</button>
+    </div>
+  </div>
+</app-modal>
+<!--
+Content
+-->
+
+<div class="block-center" style="width: 100%; display: block">
+  <div class="sticky">
+    <h2>Rechnerdatenbank</h2>
+    <button *ngIf="show == false" mat-raised-button (click)="toggleShow()">Mehr Details</button>
+    <button *ngIf="show == true" mat-raised-button (click)="toggleShow()">Weniger Details</button>
+    <div style="width: 5px; height: auto; display: inline-block"></div>
+    <button mat-raised-button (click)="newComputerDialog()">Neuer Computer</button>
+    <div style="width: 5px; height: auto; display: inline-block"></div>
+    <button mat-raised-button (click)="useFilter(filterString)">Jetzt suchen</button>
+    <div style="width: 5px; height: auto; display: inline-block"></div>
+    <br><div class="divider"></div>
+  </div>
+
+  <div>
+    <div class="table-striped table-bordered table-sm" >
+      <div>
+        <!--Filter Element-->
+        <mat-form-field class="sticky-filter">
+          <mat-label>Suchfeld</mat-label>
+          <input matInput [(ngModel)]="filterString" placeholder="Bsp. Eingabe: 'Laptop'. Um die Suche rückgängig zu machen, einfach nach nichts suchen.">
+        </mat-form-field>
+        <simple-notifications></simple-notifications>
+        <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8" matSort style="width: 100%" *ngIf="!isLoading">
+          <ng-container matColumnDef="type">
+            <th class="sticky-header" mat-header-cell *matHeaderCellDef mat-sort-header>Typ</th>
+            <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{element.computer.type}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name" >
+            <th class="sticky-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{element.computer.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ip">
+            <th class="sticky-header"  mat-header-cell *matHeaderCellDef mat-sort-header>IP</th>
+            <td mat-cell *matCellDef="let element">{{element.computer.ip}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="edv">
+            <th class="sticky-header"  mat-header-cell *matHeaderCellDef mat-sort-header>EDV</th>
+            <td mat-cell *matCellDef="let element">{{element.computer.edv}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="user">
+            <th class="sticky-header"  mat-header-cell *matHeaderCellDef mat-sort-header>Benutzer</th>
+            <td mat-cell *matCellDef="let element">
+              <p>{{element.computer.user.firstname + ' ' + element.computer.user.lastname}}</p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="room">
+            <th class="sticky-header"  mat-header-cell *matHeaderCellDef mat-sort-header>Raum</th>
+            <td mat-cell *matCellDef="let element">
+              <p>{{element.computer.room.name}}</p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="os">
+            <th class="sticky-header"  mat-header-cell *matHeaderCellDef mat-sort-header>Betriebssystem</th>
+            <td mat-cell *matCellDef="let element">
+              <p>{{element.computer.os.name + ' ' + element.computer.os.version}}</p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="note">
+            <th class="sticky-header"  mat-header-cell *matHeaderCellDef mat-sort-header>Bemerkung</th>
+            <td mat-cell *matCellDef="let element">{{element.computer.note}}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions" >
+            <th class="sticky-header" mat-header-cell *matHeaderCellDef>Editieren</th>
+            <td mat-cell *matCellDef="let element">
+                <div *ngIf="
+                element.computer.mainboard === null ||
+                element.computer.os === null ||
+                element.computer.pcie.edges.length === 0 ||
+                element.computer.processor.edges.length === 0 ||
+                element.computer.ram.edges.length === 0">
+                  <button mat-raised-button (click)="editComputerDialog(element.computer)" class="buttonRed">
+                    <img src="../../../../assets/baseline-edit-24px.svg" class="edit">
+                  </button>
+                </div>
+                <div *ngIf="
+                element.computer.mainbord !== null &&
+                element.computer.os !== null &&
+                element.computer.pcie.edges.length !== 0 &&
+                element.computer.processor.edges.length !== 0 &&
+                element.computer.ram.edges.length !== 0
+                ">
+                  <button mat-raised-button  (click)="editComputerDialog(element.computer)" >
+                    <img src="../../../../assets/baseline-edit-24px.svg" class="edit">
+                  </button>
+                </div>
+              <!--<ng-container>
+                <div *ngIf="element.mainboard['mainboard'].length === 0 || element.os['os'].length === 0 || element.pcie['pcie'].length === 0 || element.processor['processors'].length === 0 || element.ram['rams'].length === 0">
+                  <button mat-raised-button (click)="editComputerDialog(element)" class="buttonRed">
+                    <img src="../../../assets/baseline-edit-24px.svg" class="edit">
+                  </button>
+                  <br>
+                </div>
+                <div *ngIf="element.mainboard['mainboard'].length !== 0 && element.os['os'].length !== 0 && element.pcie['pcie'].length !== 0 && element.processor['processors'].length !== 0 && element.ram['rams'].length !== 0">
+                  <button mat-raised-button  (click)="editComputerDialog(element)" >
+                    <img src="../../../assets/baseline-edit-24px.svg" class="edit">
+                  </button>
+                  <br>
+                </div>
+              </ng-container>-->
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="actions2">
+          <th class="sticky-header" mat-header-cell *matHeaderCellDef>Löschen</th>
+          <<td mat-cell *matCellDef="let element">
+            <ng-container>
+              <button  mat-raised-button (click)="openModal('delete-modal', element.computer.computerId, element.computer.name)">
+                <img src="../../../../assets/delete-24px.svg" class="edit">
+              </button>
+            </ng-container>
+          </td>
+          </ng-container>
+          <ng-container matColumnDef="processor">
+            <td class="mat-header-cell-firstchild" mat-cell *matCellDef="let element">
+              <div *ngIf="show == true" class="mat-header-cell">Prozessor</div>
+              <div *ngIf="show == true && element.computer.processor.edges.length !== 0">
+                <div *ngFor="let processor of element.computer.processor.edges">
+                  -{{processor.node.processor.producer}} {{processor.node.processor.name}} {{processor.node.processor.clock}} GHz
+                </div>
+              </div>
+              <!--<div *ngIf="element.processor === null && show == true">Unknown</div>
+              <div *ngIf="element.processor !== null && show == true">
+                <div *ngFor="let processor of element.processor['processors']">
+                  {{processor.producer}} {{processor.name}} {{processor.clock}} GHz
+                </div>
+              </div>-->
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="mainboard">
+            <td class="mat-header-cell-firstchild"  mat-cell *matCellDef="let element">
+              <div *ngIf="show == true" class="mat-header-cell">Mainboard</div>
+              <div *ngIf="show == true">{{element.computer.mainboard.producer}}  {{element.computer.mainboard.name}}</div>
+              <!--<div *ngIf="element.mainboard !== null && show == true">
+                <div *ngFor="let mainboard of element.mainboard['mainboard']">
+                <div *ngFor="let mainboard of element.mainboard['mainboard']">
+                  {{mainboard.producer}} {{mainboard.name}}
+                </div>
+              </div>-->
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ram">
+            <td class="mat-header-cell-firstchild"  mat-cell *matCellDef="let element">
+              <div *ngIf="show == true" class="mat-header-cell">Ram</div>
+              <div *ngIf="show == true && element.computer.ram.edges.length !== 0">
+                <div *ngFor="let ram of element.computer.ram.edges">
+                  -{{ram.node.ram.producer}}: {{ram.node.ram.capacity}}GB {{ram.node.ram.standard}} {{ram.node.ram.frequency}} MHz
+                </div>
+              </div>
+              <!--<div *ngIf="show == true && element.ram === null">
+                Unknown
+              </div>
+              <div *ngIf="show == true && element.ram !== null">
+                <div *ngFor="let ram of element.ram['rams']">
+                  {{ram.producer}}: {{ram.capacity}}GB {{ram.standard}} {{ram.frequency}} MHz<br>
+                </div>
+              </div>-->
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="pcie">
+            <td class="mat-header-cell-firstchild"  mat-cell *matCellDef="let element">
+              <div *ngIf="show == true" class="mat-header-cell">PCIe</div>
+              <div *ngIf="show == true && element.computer.pcie.edges.length !== 0">
+                <div *ngFor="let pcie of element.computer.pcie.edges">
+                  -{{pcie.node.pcie.type}} {{pcie.node.pcie.producer}} {{pcie.node.pcie.name}}
+                </div>
+              </div>
+              <!--<div *ngIf="show == true && element.pcie === null">
+                Unknown
+              </div>
+              <div *ngIf="show == true && element.pcie !== null">
+                <div *ngFor="let pcie of element.pcie['pcie']">
+                  {{pcie.type}} {{pcie.producer}} {{pcie.name}}<br>
+                </div>
+              </div>-->
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="storage">
+              <td class="mat-header-cell-firstchild"  mat-cell *matCellDef="let element">
+                <div *ngIf="show == true" class="mat-header-cell">Festplattenspeicher</div>
+                <div *ngIf="show == true">{{element.computer.storage}}</div>
+              </td>
+          </ng-container>
+
+          <ng-container matColumnDef="software">
+            <td class="mat-header-cell-firstchild"  mat-cell *matCellDef="let element">
+              <div *ngIf="show == true" class="mat-header-cell">Software</div>
+              <div *ngIf="show == true && element.computer.software.edges !== 0">
+                <div *ngFor="let software of element.computer.software.edges">
+                  -{{software.node.software.name}}
+                </div>
+              </div>
+              <!--<div *ngIf="show == true && element.software !== null">
+                <ng-container *ngFor="let sftwr of element.software['software']">
+                  {{sftwr.name}}<br>
+                </ng-container>
+              </div>-->
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="mac">
+            <td class="mat-header-cell-firstchild" mat-cell *matCellDef="let element">
+              <div *ngIf="show==true" class="mat-header-cell">MAC-Adresse</div>
+              <div *ngIf="show==true && element.computer['macadresses']['edges'] !== 0">
+                <div *ngFor="let mac of element.computer['macadresses']['edges']">
+                  -<a (click)="macOptions(mac.node)" style="color: blue">{{mac.node.type}}: {{mac.node.macAdresse}}</a>
+                </div>
+                <div>
+                  <a (click)="addMac(element.computer)"><b>Hinzufügen</b></a>
+                </div>
+              </div>
+
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="space2">
+            <td mat-cell *matCellDef="let element"></td>
+          </ng-container>
+          <ng-container matColumnDef="space3">
+            <td mat-cell *matCellDef="let element"></td>
+          </ng-container>
+          <ng-container matColumnDef="space4">
+            <td mat-cell *matCellDef="let element"></td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumnsDetails;"></tr>
+        </table>
+
+        <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center; background: white;">
+          <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+

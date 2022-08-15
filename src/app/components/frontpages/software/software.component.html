@@ -1,0 +1,553 @@
+<app-modal id="software-delete-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Software</h1>
+    </div>
+    <div class="row">
+      Software wirklich aus der Liste und von allen Computer löschen?
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="softwaredeleteyes('software-delete-modal')">Ja</button>
+      <button mdbBtn (click)="softwaredeleteno('software-delete-modal')">Nein</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="os-delete-modal">
+  <div class="container">
+    <div class="row">
+      <h1>Betriebssystem</h1>
+    </div>
+    <div class="row">
+      Betriebssystem wirklich aus der Liste und von allen Computer löschen?
+    </div>
+    <div class="row">
+      <button mdbBtn (click)="osdeleteyes('os-delete-modal')">Ja</button>
+      <button mdbBtn (click)="osdeleteno('os-delete-modal')">Nein</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="software-add-modal">
+  <div class="container">
+    <div class="row"><h1>Software</h1></div>
+    <div class="row">Software wurde erfolgreich hinzugefügt!</div>
+    <div class="row">
+      <button mdbBtn (click)="softwareError('software-add-modal')">Okay</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="os-add-modal">
+  <div class="container">
+    <div class="row"><h1>Betriebssystem</h1></div>
+    <div class="row">Betriebssystem wurde erfolgreich hinzugefügt!</div>
+    <div class="row">
+      <button mdbBtn (click)="osError('os-add-modal')">Okay</button>
+    </div>
+  </div>
+</app-modal>
+
+
+<app-modal id="software-error-modal">
+  <div class="container">
+    <div class="row"><h1>Software</h1></div>
+    <div class="row">Die Software existiert bereits oder es ist ein anderer Fehler aufgetreten!</div>
+    <div class="row">
+      <button mdbBtn (click)="softwareError('software-error-modal')">Okay</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal id="os-error-modal">
+  <div class="container">
+    <div class="row"><h1>Betriebssystem</h1></div>
+    <div class="row">Das Betriebssystem existiert bereits oder es ist ein anderer Fehler aufgetreten!</div>
+    <div class="row">
+      <button mdbBtn (click)="osError('os-error-modal')">Okay</button>
+    </div>
+  </div>
+</app-modal>
+<!--
+Dialogs
+-->
+<!--
+Content
+Content
+-->
+<div class="block-center">
+
+  <div class="sticky">
+    <h2>Software</h2><br><div class="divider"></div>
+  </div>
+  <simple-notifications></simple-notifications>
+  <mat-tab-group dynamicHeight>
+    <mat-tab label="Software">
+      <div class="table table-striped table-bordered table-sm">
+        <div class="col">
+          <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center; background: white;">
+            <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+          </div>
+            <mat-grid-list cols="1" rowHeight='3:1'>
+              <mat-grid-tile>
+                <div class="mat-grid-tile-list">
+                  <fieldset *ngIf="!isLoading">
+                    <legend>Software</legend>
+                    <table mat-table [dataSource]="dataSourceSoftware" class="mat-elevation-z8" matSort (matSortChange)="sortSoftwareData($event, dataSourceSoftware)"  >
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{element.node.name}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="description">Beschreibung</th>
+                        <td class="mat-cell-firstchild multi-line" mat-cell *matCellDef="let element">{{element.node.description}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="count">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="count">Anzahl Lizenzen (zugewiesen)</th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayCount(element.node)}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Typ</th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{type_display_names[element.node.type]}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="expiration_date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="expiration_date">Ablaufdatum</th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayDate(element.node.expirationDate)}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="contact">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="contact">Ansprechperson</th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayContact(element.node.contact)}}</td>
+                      </ng-container>
+
+
+                      <ng-container matColumnDef="button1">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">
+                          <button mat-raised-button [disabled]="disable"  (click)="openModal('software-delete-modal', element.node.softwareId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="button2">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">
+                          <!--<a [routerLink]="['/softwarebearbeiten', element.software_id]"></a>-->
+                          <button mat-raised-button [disabled]="disable" (click)="editSoftware(element.node)"><img src="../../../../assets/baseline-edit-24px.svg" class="-edit"></button>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsSoftware"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedColumnsSoftware" [ngClass]="{'date-warn': checkDate(element.node.expirationDate) == 1, 'date-expired': checkDate(element.node.expirationDate) == 2, 'missing-info': (element.node.count < 1)}"></tr>
+                    </table>
+                  </fieldset>
+                </div>
+              </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Netzwerklizenzen">
+      <div class="table table-striped table-bordered table-sm">
+        <div class="col">
+          <mat-grid-list cols="1" rowHeight='3:1'>
+            <mat-grid-tile>
+              <div class="mat-grid-tile-list">
+                <fieldset>
+                  <legend>Netzwerklizenzen</legend>
+<!--                  <i>Lizenzen, die entweder einen eigenen Lizenzserver haben oder extern (nicht über die RWTH) erworben wurden</i> -->
+                  <table mat-table [dataSource]="dataSourceSpecialSoftware" class="mat-elevation-z8" matSort (matSortChange)="sortSoftwareData($event, dataSourceSpecialSoftware)">
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{element.node.name}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="description">Beschreibung</th>
+                      <td class="mat-cell-firstchild multi-line" mat-cell *matCellDef="let element">{{element.node.description}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="count">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="count">Anzahl Lizenzen (zugewiesen)</th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayCount(element.node)}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="expiration_date">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="expiration_date">Ablaufdatum</th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayDate(element.node.expirationDate)}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="contact">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="contact">Ansprechperson</th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayContact(element.node.contact)}}</td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="button1">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">
+                        <button mat-raised-button [disabled]="disable"  (click)="openModal('software-delete-modal', element.node.softwareId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="button2">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">
+                        <button mat-raised-button [disabled]="disable" (click)="editSoftware(element.node)"><img src="../../../../assets/baseline-edit-24px.svg" class="-edit"></button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsSpecialSoftware"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumnsSpecialSoftware" [ngClass]="{'date-warn': checkDate(element.node.expirationDate) == 1, 'date-expired': checkDate(element.node.expirationDate) == 2, 'missing-info': (element.node.count < 1)}"></tr>
+                  </table>
+                </fieldset>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Einzelplatzlizenzen">
+      <div class="table table-striped table-bordered table-sm">
+        <div class="col">
+          <mat-grid-list cols="1" rowHeight='3:1'>
+            <mat-grid-tile>
+              <div class="mat-grid-tile-list">
+                <fieldset>
+                  <legend>Einzelplatzlizenzen</legend>
+                  <table mat-table [dataSource]="dataSourceSingleSoftware" class="mat-elevation-z8" matSort (matSortChange)="sortSoftwareData($event, dataSourceSingleSoftware)">
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{element.node.name}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="description">Beschreibung</th>
+                      <td class="mat-cell-firstchild multi-line" mat-cell *matCellDef="let element">{{element.node.description}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="count">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="count">Anzahl Lizenzen (zugewiesen)</th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayCount(element.node)}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="expiration_date">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="expiration_date">Ablaufdatum</th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayDate(element.node.expirationDate)}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="contact">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="contact">Ansprechperson</th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{displayContact(element.node.contact)}}</td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="button1">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">
+                        <button mat-raised-button [disabled]="disable"  (click)="openModal('software-delete-modal', element.node.softwareId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="button2">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">
+                        <button mat-raised-button [disabled]="disable" (click)="editSoftware(element.node)"><img src="../../../../assets/baseline-edit-24px.svg" class="-edit"></button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsSingleSoftware"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumnsSingleSoftware" [ngClass]="{'date-warn': checkDate(element.node.expirationDate) == 1, 'date-expired': checkDate(element.node.expirationDate) == 2, 'missing-info': (element.node.count < 1)}"></tr>
+                  </table>
+                </fieldset>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Betriebssysteme">
+      <div class="table table-striped table-bordered table-sm">
+        <div class="col">
+          <div>
+            <mat-grid-list cols="1" rowHeight='3:1'>
+              <mat-grid-tile>
+                <div class="mat-grid-tile-list">
+                  <fieldset>
+                    <legend>Betriebsystem</legend>
+                    <table mat-table [dataSource]="dataSourceOS"  class="mat-elevation-z8" matSort (matSortChange)="sortOSData($event)">
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{element.node.name}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="version">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="version">Version</th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">{{element.node.version}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="button1">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">
+                          <button mat-raised-button [disabled]="disable" (click)="openModal('os-delete-modal', element.node.osId)"><img src="../../../../assets/delete-24px.svg" class="edit"></button>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="button2">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td class="mat-cell-firstchild" mat-cell *matCellDef="let element">
+                          <!--<a [routerLink]="['/osbearbeiten', element.os_id]"></a>-->
+                          <button mat-raised-button [disabled]="disable" (click)="editOperatorSystem(element.node)"><img src="../../../../assets/baseline-edit-24px.svg" class="-edit"></button>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsOS"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedColumnsOS"></tr>
+                    </table>
+                  </fieldset>
+                </div>
+              </mat-grid-tile>
+            </mat-grid-list>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Hinzufügen">
+      <div class="table table-striped table-bordered table-sm">
+        <div style="justify-content: center; display: flex">
+                <div style="justify-content: center; display: flex">
+                <mat-card style="display: inline-table">
+                  <mat-card-header>
+                    <mat-card-title>
+                      Software
+                    </mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <form class="software-from" #softwareForm="ngForm">
+                      <table style="width: auto; align-content: center">
+                        <tbody>
+                        <tr>
+                          <td>
+                            <mat-form-field>
+                              <mat-label>Name</mat-label>
+                              <input matInput required id="softwarename" [(ngModel)]="software.name" name="softwarename">
+                            </mat-form-field>
+
+                            <mat-form-field>
+                              <mat-label>Anzahl</mat-label>
+                              <input matInput type="number" id="softwarecount" [(ngModel)]="software.count" name="softwarecount">
+                            </mat-form-field>
+
+                            <mat-form-field>
+                              <mat-label>Typ</mat-label>
+                              <mat-select id="type" [(ngModel)]="software.type" name="softwaretype">
+                                <mat-option *ngFor="let iter_type of all_types" [value]="iter_type">{{type_display_names[iter_type]}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field>
+                              <mat-label for="contact">Ansprechpartner</mat-label>
+                              <mat-select id="contact" [(ngModel)]="software.contact" name="softwarecontact">
+                                <mat-option *ngFor="let contact of all_contacts" [value]="contact.user_id">{{contact.firstname + ' ' + contact.lastname}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field>
+                              <mat-label>Ablaufdatum</mat-label>
+                              <input matInput type="date" id="softwareexpiration_date" [(ngModel)]="software.expiration_date" name="softwareexpiration_date">
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field>
+                              <mat-label>Beschreibung</mat-label>
+                              <textarea matInput type="text" class="textarea-note" id="softwaredescription" [(ngModel)]="software.description" name="softwaredescription" rows="12" ></textarea>
+                            </mat-form-field>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </form>
+                  </mat-card-content>
+                  <mat-card-actions>
+                    <button mat-raised-button (click)="addSoftware()" class="btn-primary" [disabled]="!softwareForm.form.valid">Software hinzufügen</button>
+                  </mat-card-actions>
+                </mat-card>
+                </div>
+                <div style="padding: 16px"></div>
+                <div style="justify-content: center; display: flex">
+                  <mat-card style="display: inline-table">
+                    <mat-card-header>
+                      <mat-card-title>
+                        Betriebssystem
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <form class="os-form" #osForm="ngForm">
+                        <table style="width: auto; align-content: center">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <mat-form-field>
+                                  <mat-label>Name</mat-label>
+                                  <input matInput required id="osname" [(ngModel)]="_os.name" name="osname">
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field>
+                                  <mat-label>Version</mat-label>
+                                  <input matInput required id="osversion" [(ngModel)]="_os.version" name="osversion">
+                                </mat-form-field>
+                              </td>
+                            </tr>
+
+                          </tbody>
+                        </table>
+                      </form>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-raised-button (click)="addOS()" class="btn-primary" [disabled]="!osForm.form.valid">OS hinzufügen</button>
+                    </mat-card-actions>
+                  </mat-card>
+                </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Verbinden">
+      <div class="table table-striped table-bordered table-sm">
+        <div class="col">
+          <mat-grid-list cols="5" rowHeight="2:1">
+            <form  #verbindeForm="ngForm">
+              <div>
+              <mat-grid-tile rowspan="3" class="scrollbar" >
+                <mat-selection-list #computernamelist class="listheight">
+                  <mat-list-option *ngFor="let computer of _computers" [value]="computer" [selected]="computer.selected" (click)="onAreaListControlChangeVerbinden(computernamelist)">
+                    {{computer.name}}
+                  </mat-list-option>
+                </mat-selection-list>
+              </mat-grid-tile>
+              </div>
+              <mat-grid-tile colspan="3" rowspan="2">
+                <mat-chip-list class="chip-rand-verbinden scrollbar"
+                  cdkDropList
+                  #newSoftwareList="cdkDropList"
+                  [cdkDropListData]="draggedSoftware"
+                  [cdkDropListConnectedTo]="[softwarelist]"
+                  (cdkDropListDropped)="drop($event)">
+                  <mat-chip cdkDrag *ngFor="let software of draggedSoftware">
+                    {{software.name + displayOwnerConnectSoftwareMenu(software)}}
+                  </mat-chip>
+                </mat-chip-list>
+              </mat-grid-tile>
+              <mat-grid-tile colspan="1" rowspan="3" >
+                <mat-grid-tile-footer class="footerheight">
+                  <table>
+                    <tbody>
+                    <tr>
+                      <td align="center">
+                        <button mat-raised-button (click)="addSoftwareToComp()" class="btn-primary">Zuweisen</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center">
+                        <button mat-raised-button class="btn-primary" (click)="emptyConsoleText()">Console leeren</button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </mat-grid-tile-footer>
+              </mat-grid-tile>
+            </form>
+            <mat-grid-tile colspan="3" rowspan="1">
+              <mat-chip-list class="chip-rand scrollbar"
+                cdkDropList
+                #softwarelist="cdkDropList"
+                [cdkDropListData]="completeSoftware"
+                [cdkDropListConnectedTo]="[newSoftwareList]"
+                (cdkDropListDropped)="drop($event)">
+                <mat-chip cdkDrag *ngFor="let software of completeSoftware">
+                  {{software['name']  + displayOwnerConnectSoftwareMenu(software)}}
+                </mat-chip>
+              </mat-chip-list>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="5">
+              <div class="consolediv">
+                <textarea  class="consolearea" [value]="progressText" readonly>
+                </textarea>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Trennen">
+      <div class="table table-striped table-bordered table-sm">
+        <div class="col">
+          <mat-grid-list cols="5" rowHeight="2:1">
+            <form #trenneForm="ngForm">
+              <div>
+                <mat-grid-tile rowspan="3" class="scrollbar" >
+                  <mat-selection-list #computernamenList [multiple]="false" class="listheight">
+                    <mat-list-option *ngFor="let computer of _computers" [value]="computer" [selected]="computer.selected" (click)="onAreaListControlChangeTrennen(computernamenList)" >
+                      {{computer.name}}
+                    </mat-list-option>
+                  </mat-selection-list>
+                </mat-grid-tile>
+              </div>
+              <mat-grid-tile colspan="3" rowspan="2">
+                  <mat-chip-list class="chip-rand scrollbar"
+                                 cdkDropList
+                                 #computersoftwarelist="cdkDropList"
+                                 [cdkDropListData]="computerSoftwareList"
+                                 [cdkDropListConnectedTo]="[softwareTrennenList]"
+                                 (cdkDropListDropped)="dropTrennen($event)">
+                    <mat-chip cdkDrag *ngFor="let software of computerSoftwareList">
+                      {{software.name + displayOwnerDisconnectSoftwareMenu(software)}}
+                    </mat-chip>
+                  </mat-chip-list>
+              </mat-grid-tile>
+              <mat-grid-tile colspan="1" rowspan="3" >
+                <mat-grid-tile-footer class="footerheight">
+                  <table>
+                    <tbody>
+                    <tr>
+                      <td align="center">
+                        <button mat-raised-button (click)="delSoftwareFromComp()" class="btn-primary">Trennen</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center">
+                        <button mat-raised-button class="btn-primary" (click)="emptyConsoleTextTrennen()">Console leeren</button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </mat-grid-tile-footer>
+              </mat-grid-tile>
+            </form>
+            <mat-grid-tile colspan="3" rowspan="1">
+              <mat-chip-list class="chip-rand-trennen scrollbar"
+                             cdkDropList
+                             #softwareTrennenList="cdkDropList"
+                             [cdkDropListData]="draggedSoftwaretrennen"
+                             [cdkDropListConnectedTo]="[computersoftwarelist]"
+                             (cdkDropListDropped)="dropTrennen($event)">
+                <mat-chip cdkDrag *ngFor="let software of draggedSoftwaretrennen">
+                  {{software.name + displayOwnerDisconnectSoftwareMenu(software)}}
+                </mat-chip>
+              </mat-chip-list>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="5">
+              <div class="consolediv">
+                <textarea  class="consolearea" [value]="progressTextTrennen" readonly>
+                </textarea>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

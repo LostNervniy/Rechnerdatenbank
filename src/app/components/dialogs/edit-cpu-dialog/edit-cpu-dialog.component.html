@@ -1,0 +1,54 @@
+<h1 mat-dialog-title>Bearbeite CPU</h1>
+<div mat-dialog-content>
+  <form #cpuForm>
+    <table>
+      <tbody>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label>Hersteller</mat-label>
+            <mat-select id="cpuproducer" required [(ngModel)]="_cpu.producer" name="cpuproducer">
+              <mat-option *ngFor="let prod of _cpuproducers" [value]="prod">{{prod}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput id="cpuname" required [(ngModel)]="_cpu.name" name="cpuname">
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label>Taktrate</mat-label>
+            <input matInput id="cpuclock" required min="0.00" max="9.99" step=".1" type="number" [(ngModel)]="_cpu.clock" name="cpuclock">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label>Architektur</mat-label>
+            <mat-select id="cpuarchitecture" required [(ngModel)]="_cpu.architecture" name="cpuarchitecture">
+              <mat-option *ngFor="let arch of _architectures" [value]="arch">{{arch}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <mat-form-field>
+            <mat-label>Sockel</mat-label>
+            <input matInput id="cpusocket" required [(ngModel)]="_cpu.socket" name="cpucocket">
+          </mat-form-field>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="editCPU()">Speichern</button>
+  <div style="width: 5px; height: auto; display: inline-block"></div>
+  <button mat-raised-button (click)="closeEditCPU()">Abbrechen</button>
+</div>
